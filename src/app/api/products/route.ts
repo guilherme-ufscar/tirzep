@@ -29,6 +29,6 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ products, total, page, limit });
     } catch (error) {
         console.error('GET /api/products error:', error);
-        return NextResponse.json({ error: error.message || 'Erro' }, { status: 500 });
+        return NextResponse.json({ error: error instanceof Error ? error.message : 'Erro' }, { status: 500 });
     }
 }
