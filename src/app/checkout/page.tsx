@@ -38,6 +38,7 @@ export default function CheckoutPage() {
     };
 
     const validate = () => {
+        const newErrors: Record<string, string> = {};
         if (!form.customerName.trim()) newErrors.customerName = 'Nome é obrigatório';
         if (!form.customerPhone.trim()) newErrors.customerPhone = 'Telefone com DDD é obrigatório';
         else {
