@@ -47,8 +47,14 @@ export default function AdminDashboard() {
             });
             if (res.status === 401) { router.push('/admin'); return; }
             const data = await res.json();
-            setStats(data);
-        } catch { } finally { setLoading(false); }
+            if (res.ok) {
+                setStats(data);
+            } else {
+                console.error('Erro ao buscar stats:', data);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally { setLoading(false); }
     }, [router]);
 
     useEffect(() => { fetchStats(); }, [fetchStats]);
