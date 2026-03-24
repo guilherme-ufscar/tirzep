@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin") // admin, attendant, stock, reports
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  auditLogs AuditLog[]
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  products  Product[]
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  slug        String      @unique
+  description String
+  price       Float
+  originalPrice Float?
+  images      String      @default("[]") // JSON array of image paths
+  stock       Int         @default(0)
+  active      Boolean     @default(true)
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  orderNumber     String      @unique
+  customerName    String
+  customerEmail   String      @default("")
+  customerPhone   String
+  addressStreet   String
+  addressNumber   String
+  addressComplement String    @default("")
+  addressNeighborhood String
+  addressCity     String
+  addressState    String
+  addressZip      String
+  locality        String      // "bh" or "fora"
+  paymentMethod   String      // "entrega" or "online"
+  paymentStatus   String      @default("pending") // pending, paid, failed
+  transactionId   String      @default("")
+  status          String      @default("novo") // novo, reserva_criada, pagamento_aprovado, em_contato, confirmado, em_separacao, saiu_entrega, entregue, cancelado
+  notes           String      @default("")
+  total           Float
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
+  name      String
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String
+  details   String   @default("")
+  createdAt DateTime @default(now())
+}
