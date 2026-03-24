@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/AdminSidebar';
+import { getImageUrl } from '@/lib/imageUrl';
 import { Plus, Pencil, Trash2, ToggleLeft } from 'lucide-react';
 
 interface Product {
@@ -214,7 +215,7 @@ export default function AdminProdutosPage() {
                                     <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                                         {JSON.parse(form.images).map((img: string, i: number) => (
                                             <div key={i} style={{ position: 'relative' }}>
-                                                <img src={img} alt="" style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
+                                                <img src={getImageUrl(img)} alt="" style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
                                                 <button type="button" onClick={() => {
                                                     const newImgs = JSON.parse(form.images).filter((_: string, idx: number) => idx !== i);
                                                     setForm({...form, images: JSON.stringify(newImgs)});

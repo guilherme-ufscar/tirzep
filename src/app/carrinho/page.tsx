@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { useLocality } from '@/contexts/LocalityContext';
+import { getImageUrl } from '@/lib/imageUrl';
 import { ShoppingCart, Truck, MapPin, Package, Trash2 } from 'lucide-react';
 
 export default function CarrinhoPage() {
@@ -34,7 +35,7 @@ export default function CarrinhoPage() {
                                 <div className="cart-item-img">
                                     {item.image ? (
                                         // eslint-disable-next-line @next/next/no-img-element
-                                        <img src={item.image} alt={item.name} />
+                                        <img src={getImageUrl(item.image)} alt={item.name} />
                                     ) : (
                                         <div className="placeholder-img" style={{ width: '100px', height: '100px', fontSize: '1.5rem' }}>
                                             {item.name.charAt(0)}

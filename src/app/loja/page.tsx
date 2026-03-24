@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/contexts/ToastContext';
+import { getImageUrl } from '@/lib/imageUrl';
 import { Search, ShoppingCart } from 'lucide-react';
 
 interface Category {
@@ -61,8 +62,8 @@ export default function LojaPage() {
     }, [selectedCategory, search]);
 
     const handleAdd = (p: Product) => {
-        const imgs = JSON.parse(p.images || '[]');
-        addItem({ id: p.id, name: p.name, price: p.price, image: imgs[0] || '', slug: p.slug });
+        const imgs: string[] = JSON.parse(p.images || '[]');
+        addItem({ id: p.id, name: p.name, price: p.price, image: getImageUrl(imgs[0] || ''), slug: p.slug });
         showToast(`${p.name} adicionado ao carrinho!`);
     };
 
@@ -106,14 +107,14 @@ export default function LojaPage() {
                 ) : (
                     <div className="product-grid">
                         {products.map(p => {
-                            const imgs = JSON.parse(p.images || '[]');
+                            const imgs: string[] = JSON.parse(p.images || '[]');
                             return (
                                 <div key={p.id} className="card product-card">
                                     <Link href={`/produto/${p.slug}`}>
                                         <div className="product-card-img">
                                             {imgs[0] ? (
                                                 // eslint-disable-next-line @next/next/no-img-element
-                                                <img src={imgs[0]} alt={p.name} />
+                                                <img src={getImageUrl(imgs[0])} alt={p.name} />
                                             ) : (
                                                 <div className="placeholder-img">{p.name.charAt(0)}</div>
                                             )}

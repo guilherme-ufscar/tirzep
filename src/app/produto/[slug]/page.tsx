@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { useLocality } from '@/contexts/LocalityContext';
 import { useToast } from '@/contexts/ToastContext';
+import { getImageUrl } from '@/lib/imageUrl';
 import { Truck, CreditCard, MapPin, Package, PackageX, ShoppingCart } from 'lucide-react';
 
 interface Product {
@@ -49,10 +50,10 @@ export default function ProductPage() {
         </div>
     );
 
-    const imgs = JSON.parse(product.images || '[]');
+    const imgs: string[] = JSON.parse(product.images || '[]');
 
     const handleAdd = () => {
-        addItem({ id: product.id, name: product.name, price: product.price, image: imgs[0] || '', slug: product.slug }, qty);
+        addItem({ id: product.id, name: product.name, price: product.price, image: getImageUrl(imgs[0] || ''), slug: product.slug }, qty);
         showToast(`${product.name} (x${qty}) adicionado ao carrinho!`);
     };
 
@@ -73,7 +74,7 @@ export default function ProductPage() {
                     <div className="product-gallery">
                         {imgs[0] ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src={imgs[0]} alt={product.name} />
+                            <img src={getImageUrl(imgs[0])} alt={product.name} />
                         ) : (
                             <div className="placeholder-img" style={{ fontSize: '5rem' }}>{product.name.charAt(0)}</div>
                         )}

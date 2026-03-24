@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useLocality } from '@/contexts/LocalityContext';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/contexts/ToastContext';
+import { getImageUrl } from '@/lib/imageUrl';
 import { Zap, Truck, Package, CreditCard, Gift, Snowflake, Syringe, ShieldCheck, Rocket, ShoppingCart } from 'lucide-react';
 
 interface Product {
@@ -30,8 +31,8 @@ export default function HomePage() {
   }, []);
 
   const handleAdd = (p: Product) => {
-    const imgs = JSON.parse(p.images || '[]');
-    addItem({ id: p.id, name: p.name, price: p.price, image: imgs[0] || '', slug: p.slug });
+    const imgs: string[] = JSON.parse(p.images || '[]');
+    addItem({ id: p.id, name: p.name, price: p.price, image: getImageUrl(imgs[0] || ''), slug: p.slug });
     showToast(`${p.name} adicionado ao carrinho!`);
   };
 
@@ -134,14 +135,14 @@ export default function HomePage() {
           </div>
           <div className="product-grid">
             {products.map(p => {
-              const imgs = JSON.parse(p.images || '[]');
+              const imgs: string[] = JSON.parse(p.images || '[]');
               return (
                 <div key={p.id} className="card product-card">
                   <Link href={`/produto/${p.slug}`}>
                     <div className="product-card-img">
                       {imgs[0] ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={imgs[0]} alt={p.name} />
+                        <img src={getImageUrl(imgs[0])} alt={p.name} />
                       ) : (
                         <div className="placeholder-img">{p.name.charAt(0)}</div>
                       )}
